@@ -877,38 +877,6 @@ document.getElementById('lyra-contact-form').addEventListener('submit', async fu
 
 
 <script>
-document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var btn = form.querySelector('button[type="submit"]');
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
-
-    var params = {
-      name: form.querySelector('[name="name"]').value,
-      email: form.querySelector('[name="email"]').value,
-      business: (form.querySelector('[name="business"]') || {}).value || '',
-      platforms: (form.querySelector('[name="platforms"]') || {}).value || '',
-      message: (form.querySelector('[name="message"]') || {}).value || '',
-    };
-
-    emailjs.send("service_elcv161", "template_3a0st8d", params)
-      .then(function() {
-        form.style.display = 'none';
-        var success = document.getElementById('form-success');
-        if (success) success.style.display = 'block';
-      }, function(error) {
-        alert('Something went wrong — please email larachristie01@gmail.com directly.');
-        console.error(error);
-      });
-
-    btn.textContent = 'Send enquiry →';
-    btn.disabled = false;
-  });
-});
-</script>
-
-<script>
 // Nexus waitlist — sends to Google Sheet
 document.querySelectorAll('.nexus-form').forEach(function(form) {
   form.addEventListener('submit', async function(e) {
@@ -938,38 +906,41 @@ document.querySelectorAll('.nexus-form').forEach(function(form) {
 });
 </script>
 
+
 <script>
-// Contact form — Formspree
 document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     var btn = form.querySelector('button[type="submit"]');
     btn.textContent = 'Sending...';
     btn.disabled = true;
+    var payload = {
+      name: (form.querySelector('[name="name"]') || {}).value || '',
+      email: (form.querySelector('[name="email"]') || {}).value || '',
+      business: (form.querySelector('[name="business"]') || {}).value || '',
+      platforms: (form.querySelector('[name="platforms"]') || {}).value || '',
+      message: (form.querySelector('[name="message"]') || {}).value || ''
+    };
     try {
       var res = await fetch('https://formspree.io/f/xqenlnjq', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({
-          name: form.querySelector('[name="name"]') ? form.querySelector('[name="name"]').value : '',
-          email: form.querySelector('[name="email"]') ? form.querySelector('[name="email"]').value : '',
-          business: form.querySelector('[name="business"]') ? form.querySelector('[name="business"]').value : '',
-          platforms: form.querySelector('[name="platforms"]') ? form.querySelector('[name="platforms"]').value : '',
-          message: form.querySelector('[name="message"]') ? form.querySelector('[name="message"]').value : ''
-        })
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         form.style.display = 'none';
         var success = document.getElementById('form-success');
         if (success) success.style.display = 'block';
       } else {
-        alert('Something went wrong — please email larachristie01@gmail.com directly.');
+        btn.textContent = 'Send enquiry →';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again.');
       }
     } catch(err) {
-      alert('Something went wrong — please email larachristie01@gmail.com directly.');
+      btn.textContent = 'Send enquiry →';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
     }
-    btn.textContent = 'Send enquiry →';
-    btn.disabled = false;
   });
 });
 </script>
