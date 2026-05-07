@@ -873,9 +873,8 @@ document.getElementById('lyra-contact-form').addEventListener('submit', async fu
     function declineCookies(){ localStorage.setItem('lyra_cookie_choice','declined'); document.getElementById('cookie-banner').style.display='none'; }
   </script>
 
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>emailjs.init("S1UkKAMzfl6PcMU1N");</script>
+
+
 
 <script>
 document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
@@ -934,6 +933,42 @@ document.querySelectorAll('.nexus-form').forEach(function(form) {
     if (msg) { msg.style.display = 'block'; }
     form.reset();
     btn.textContent = 'Join waitlist';
+    btn.disabled = false;
+  });
+});
+</script>
+
+<script>
+// Contact form — Formspree
+document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      var res = await fetch('https://formspree.io/f/xqenlnjq', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({
+          name: form.querySelector('[name="name"]') ? form.querySelector('[name="name"]').value : '',
+          email: form.querySelector('[name="email"]') ? form.querySelector('[name="email"]').value : '',
+          business: form.querySelector('[name="business"]') ? form.querySelector('[name="business"]').value : '',
+          platforms: form.querySelector('[name="platforms"]') ? form.querySelector('[name="platforms"]').value : '',
+          message: form.querySelector('[name="message"]') ? form.querySelector('[name="message"]').value : ''
+        })
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        var success = document.getElementById('form-success');
+        if (success) success.style.display = 'block';
+      } else {
+        alert('Something went wrong — please email larachristie01@gmail.com directly.');
+      }
+    } catch(err) {
+      alert('Something went wrong — please email larachristie01@gmail.com directly.');
+    }
+    btn.textContent = 'Send enquiry →';
     btn.disabled = false;
   });
 });

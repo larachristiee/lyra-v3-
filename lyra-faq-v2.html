@@ -54,16 +54,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:str
 .hero-sub{font-size:16px;line-height:1.75;color:var(--muted);max-width:520px;margin-top:32px;opacity:0;animation:fadeUp .8s ease forwards .6s;}
 
 /* FAQ layout */
-.faq-section{padding:80px 48px;}
-.faq-layout{display:grid;grid-template-columns:220px 1fr;gap:80px;align-items:start;}
+.faq-section{padding:0 0 80px;}
+.faq-layout{display:flex;flex-direction:column;gap:48px;}
 
 /* Sticky sidebar nav */
-.faq-nav{position:sticky;top:80px;}
-.faq-nav-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
-.faq-nav-links{display:flex;flex-direction:column;}
-.faq-nav-link{display:block;padding:12px 0;font-size:12px;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s,padding-left .2s;letter-spacing:.04em;}
-.faq-nav-link:first-of-type{border-top:1px solid var(--border);}
-.faq-nav-link:hover,.faq-nav-link.active{color:var(--red);padding-left:8px;}
+.faq-nav{display:flex;align-items:center;gap:0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);}
+.faq-nav-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:14px 24px;border-right:2px solid var(--ink);white-space:nowrap;flex-shrink:0;}
+.faq-nav-links{display:flex;align-items:stretch;flex:1;}
+.faq-nav-link{display:flex;align-items:center;padding:14px 24px;font-size:11px;color:var(--muted);text-decoration:none;border-right:1px solid var(--border);transition:color .2s,background .2s;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;}
+.faq-nav-link:hover,.faq-nav-link.active{color:var(--red);background:var(--surface);}
 
 /* FAQ groups */
 .faq-main{display:flex;flex-direction:column;gap:0;}
@@ -177,18 +176,18 @@ footer{background:var(--ink);border-top:3px solid var(--ink);}
 </section>
 
 <section class="faq-section fly-up">
-  <div class="faq-layout">
-    <nav class="faq-nav">
-      <div class="faq-nav-label">Jump to</div>
+  <nav class="faq-nav">
+    <span class="faq-nav-label">Jump to</span>
+    <div class="faq-nav-links">
       <a class="faq-nav-link active" href="#pricing">Pricing</a>
       <a class="faq-nav-link" href="#services">Services</a>
       <a class="faq-nav-link" href="#process">Process</a>
       <a class="faq-nav-link" href="#platforms">Platforms</a>
       <a class="faq-nav-link" href="#results">Results</a>
       <a class="faq-nav-link" href="#contracts">Contracts</a>
-    </nav>
-
-    <div class="faq-main">
+    </div>
+  </nav>
+  <div class="faq-main" style="padding:64px 48px;">
 
       <!-- PRICING -->
       <div class="faq-group" id="pricing">
@@ -326,7 +325,6 @@ footer{background:var(--ink);border-top:3px solid var(--ink);}
         </div>
       </div>
 
-    </div>
   </div>
 </section>
 
@@ -461,9 +459,8 @@ function acceptCookies(){localStorage.setItem('lyra_cookie_choice','accepted');d
 function declineCookies(){localStorage.setItem('lyra_cookie_choice','declined');document.getElementById('cookie-banner').style.display='none';}
 </script>
 
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>emailjs.init("S1UkKAMzfl6PcMU1N");</script>
+
+
 
 <script>
 document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
@@ -491,6 +488,42 @@ document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
         console.error(error);
       });
 
+    btn.textContent = 'Send enquiry →';
+    btn.disabled = false;
+  });
+});
+</script>
+
+<script>
+// Contact form — Formspree
+document.querySelectorAll('#lyra-contact-form').forEach(function(form) {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      var res = await fetch('https://formspree.io/f/xqenlnjq', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({
+          name: form.querySelector('[name="name"]') ? form.querySelector('[name="name"]').value : '',
+          email: form.querySelector('[name="email"]') ? form.querySelector('[name="email"]').value : '',
+          business: form.querySelector('[name="business"]') ? form.querySelector('[name="business"]').value : '',
+          platforms: form.querySelector('[name="platforms"]') ? form.querySelector('[name="platforms"]').value : '',
+          message: form.querySelector('[name="message"]') ? form.querySelector('[name="message"]').value : ''
+        })
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        var success = document.getElementById('form-success');
+        if (success) success.style.display = 'block';
+      } else {
+        alert('Something went wrong — please email larachristie01@gmail.com directly.');
+      }
+    } catch(err) {
+      alert('Something went wrong — please email larachristie01@gmail.com directly.');
+    }
     btn.textContent = 'Send enquiry →';
     btn.disabled = false;
   });
