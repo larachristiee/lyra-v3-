@@ -202,9 +202,119 @@ footer{background:var(--ink);padding:28px 48px;display:flex;justify-content:spac
   .case-stats { grid-template-columns: 1fr 1fr !important; }
 }
 </style>
+
+<style>
+/* Hamburger menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 52px;
+  height: 52px;
+  padding: 0 16px;
+  cursor: pointer;
+  border-left: 1px solid var(--border);
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile drawer */
+.mobile-drawer {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  right: 0;
+  background: var(--paper);
+  border-bottom: 3px solid var(--ink);
+  z-index: 490;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+  pointer-events: none;
+}
+.mobile-drawer.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-drawer a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s, padding-left 0.2s;
+  font-family: 'Archivo', sans-serif;
+}
+.mobile-drawer a:hover { background: var(--surface); padding-left: 32px; }
+.mobile-drawer a::after { content: '↗'; color: var(--red); font-size: 14px; }
+.mobile-drawer a.book-call {
+  background: var(--red);
+  color: #fff;
+  border-bottom: none;
+  margin: 12px 16px 16px;
+  justify-content: center;
+  letter-spacing: 0.12em;
+}
+.mobile-drawer a.book-call::after { display: none; }
+.mobile-drawer a.book-call:hover { background: #b31f1f; padding-left: 24px; }
+
+/* Overlay */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14,14,14,0.5);
+  z-index: 489;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex !important; }
+  .nav-cta { display: none !important; }
+}
+@media (min-width: 769px) {
+  .mobile-drawer { display: none !important; }
+  .drawer-overlay { display: none !important; }
+}
+</style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="mobile-drawer" id="mobile-drawer">
+  <a href="index.html">Home</a>
+  <a href="lyra-services-v2.html">Services</a>
+  <a href="lyra-services-v2.html#case">Work</a>
+  <a href="lyra-services-v2.html#why">Why us</a>
+  <a href="lyra-services-v2.html#nexus">Nexus</a>
+  <a href="lyra-about-v2.html">About</a>
+  <a href="lyra-faq-v2.html">FAQ</a>
+  <a href="#contact-form" class="book-call">Book a free call</a>
+</div>
 <nav>
   <a class="nav-logo" href="index.html">LYR<span>A</span></a>
   <ul class="nav-links">
@@ -216,6 +326,11 @@ footer{background:var(--ink);padding:28px 48px;display:flex;justify-content:spac
     <li><a href="lyra-faq-v2.html">FAQ</a></li>
   </ul>
   <a class="nav-cta" href="#contact-form">Book a call</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
 <section class="page-hero">
   <div class="eyebrow">Legal</div>
@@ -308,6 +423,35 @@ footer{background:var(--ink);padding:28px 48px;display:flex;justify-content:spac
 (function(){var b=document.getElementById('cookie-banner');if(!localStorage.getItem('lyra_cookie_choice')){b.style.display='flex';}})();
 function acceptCookies(){localStorage.setItem('lyra_cookie_choice','accepted');document.getElementById('cookie-banner').style.display='none';}
 function declineCookies(){localStorage.setItem('lyra_cookie_choice','declined');document.getElementById('cookie-banner').style.display='none';}
+</script>
+
+<script>
+(function() {
+  var btn = document.getElementById('hamburger');
+  var drawer = document.getElementById('mobile-drawer');
+  var overlay = document.getElementById('drawer-overlay');
+  if (!btn) return;
+  
+  function toggleMenu() {
+    btn.classList.toggle('open');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+  }
+  
+  btn.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+  
+  // Close on link click
+  drawer.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      btn.classList.remove('open');
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+})();
 </script>
 </body>
 </html>
