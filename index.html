@@ -493,6 +493,17 @@ footer { border-top: 3px solid var(--rule); background: var(--ink); }
   .case-stats { grid-template-columns: 1fr 1fr !important; }
 }
 </style>
+
+<style>
+@media (max-width: 768px) {
+  .hero-bottom { display: flex !important; flex-direction: column !important; gap: 24px !important; width: 100% !important; }
+  .hero-sub { max-width: 100% !important; width: 100% !important; }
+  .hero-actions { width: 100% !important; align-items: stretch !important; flex-direction: column !important; }
+  .btn-primary { width: 100% !important; text-align: center !important; display: block !important; }
+  .btn-ghost { justify-content: center !important; }
+  .hero-scroll-line { display: none !important; }
+}
+</style>
 </head>
 <body>
 

@@ -159,8 +159,8 @@ footer{background:var(--ink);border-top:3px solid var(--ink);}
   .hero-bottom { display: flex !important; flex-direction: column !important; gap: 24px !important; }
   .hero-sub { font-size: 15px !important; max-width: 100% !important; line-height: 1.7 !important; }
   .hero-actions { align-items: flex-start !important; }
-  .hero-left { padding: 80px 20px 40px !important; border-right: none !important; border-bottom: 2px solid var(--ink) !important; }
-  .hero-right { padding: 32px 20px !important; min-height: 240px !important; }
+  .hero-left { padding: 100px 20px 40px !important; border-right: none !important; border-bottom: 2px solid var(--ink) !important; }
+  .hero-right { padding: 32px 20px !important; min-height: 240px !important; background: var(--ink) !important; }
   .hero-name { font-size: clamp(52px, 13vw, 72px) !important; }
 
   /* RULED */
@@ -299,6 +299,42 @@ footer{background:var(--ink);border-top:3px solid var(--ink);}
   .values-strip { grid-template-columns: 1fr !important; }
   .value-item:nth-child(odd) { border-right: none !important; }
   .case-stats { grid-template-columns: 1fr 1fr !important; }
+}
+</style>
+
+<style>
+/* About hero specific fixes */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.hero-right {
+  background: var(--ink) !important;
+  min-height: 500px;
+}
+@media (max-width: 768px) {
+  .hero {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+  }
+  .hero-left {
+    padding: 100px 20px 40px !important;
+    border-right: none !important;
+    border-bottom: 2px solid var(--ink) !important;
+    min-height: auto !important;
+  }
+  .hero-right {
+    min-height: 300px !important;
+    padding: 32px 20px !important;
+    background: var(--ink) !important;
+  }
+  .hero-name {
+    font-size: clamp(48px, 12vw, 72px) !important;
+  }
+  .hero-quote-card {
+    max-width: 100% !important;
+  }
 }
 </style>
 </head>
